@@ -1,8 +1,8 @@
-formigas = soluções
+formigas = soluçõbes
 
 reduzir a duração total das viajens.
 
-cada viajem tem uma duração associada.
+cada viagem tem uma duração associada.
 
 cada tripulacao comeca e termina a trabalhar em dois dados momentos do dia.
 
@@ -10,7 +10,7 @@ probabilidade:
 
 p = {
   0, caso tempo até acabar expediente - tempo viajem < 0;
-  feromonio^{alpha} * (1 / ((tempo_expediente - (tempo até acabar expediente - tempo viajem)) * numero_disponiveis_rota()))^{beta}
+  feromonio^{alpha} * (1 / ((tempo_expediente - (tempo até acabar expediente - tempo viagem)) * numero_disponiveis_rota()))^{beta}
   / somatorio disso tudo pra as rotas ainda nao atribuidas.
 }
 
@@ -25,7 +25,11 @@ logo:
   [rota 5, tripulacao 2]
 ]
 
-se uma tripulacao aparece de novo, significa que a sua viajem anterior acabou.
+feromonio vai ser distribuido por tripulação e rota
+
+a duração de uma viagem já contabiliza o tempo de retorno ao ponto inicial.
+
+se uma tripulacao aparece de novo, significa que a sua viagem anterior acabou.
 
 atribui-se uma rota inicial para cada tripulacao, depois vai pegando a que terminar primeiro e re-atribuindo a novas rotas, ate
 terminar de atender todas as rotas. sempre seguindo o criterio probabilistico acima.
