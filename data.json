@@ -1,0 +1,78 @@
+{
+    "amountPheromone": 10,
+    "p": 0.5,
+    "alpha": 0.5,
+    "beta": 0.5,
+    "n_max": 100,
+    "trips": [
+        {
+            "sequencial": 0,
+            "vehicle": 1,
+            "duration": 3600
+        },
+        {
+            "sequencial": 1,
+            "vehicle": 2,
+            "duration": 2562
+        },
+        {
+            "sequencial": 2,
+            "vehicle": 3,
+            "duration": 1236
+        },
+        {
+            "sequencial": 3,
+            "vehicle": 1,
+            "duration": 4520
+        },
+        {
+            "sequencial": 4,
+            "vehicle": 2,
+            "duration": 1492
+        },
+        {
+            "sequencial": 5,
+            "vehicle": 3,
+            "duration": 500
+        },
+        {
+            "sequencial": 6,
+            "vehicle": 1,
+            "duration": 2136
+        },
+        {
+            "sequencial": 7,
+            "vehicle": 2,
+            "duration": 3213
+        },
+        {
+            "sequencial": 8,
+            "vehicle": 3,
+            "duration": 900
+        },
+        {
+            "sequencial": 9,
+            "vehicle": 1,
+            "duration": 832
+        }
+    ],
+    "workers": [
+        {
+            "starts": 0,
+            "ends": 28800
+        },
+        {
+            "starts": 28800,
+            "ends": 57600
+        },
+        {
+            "starts": 15000,
+            "ends": 43800
+        },
+        {
+            "starts": 22959,
+            "ends": 51759
+        }
+    ]
+
+}
