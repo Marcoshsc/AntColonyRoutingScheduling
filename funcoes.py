@@ -1,3 +1,19 @@
+from matplotlib import pyplot as plt
+
+
+def grafico_linha(x, y, name, improvement):
+    plt.rcParams['figure.figsize'] = [12, 8]
+    plt.plot(x, y, color='blue', label='Evolução ao longo das iterações', linewidth=3)
+    plt.title(f'Evolução ao longo das iterações\nPercentual de melhora: {improvement}%', size='x-large')
+    plt.xlabel('Iterações', size='x-large')
+    plt.ylabel('Função lucro', size='x-large')
+    plt.legend(loc='best', fontsize='large')
+    plt.xticks(size='large')
+    plt.yticks(size='large')
+    plt.savefig(name)
+
+
+
 def objective(solucao, tripInfo):
     maior = -1
     for s in solucao:
@@ -21,3 +37,4 @@ def getFreeWorker(workers):
         if workers[w] == True:
             return w
     return None
+

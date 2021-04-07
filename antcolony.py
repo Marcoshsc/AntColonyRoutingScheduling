@@ -1,4 +1,6 @@
 from random import randint, random
+import operator
+from funcoes import grafico_linha
 
 def fitness(solution, pairsWeight):
   return sum([pairsWeight[s[1]] for s in solution])
@@ -13,23 +15,25 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   evaporationRate = 0.1
 
   best = list
+  lucros = []
+  best_solution = []
   pairs = [[i, j] for i in range(nVehicles) for j in range(nWorkers)]
   # pairsWeight = [max([sum([benefit[j][k] - depreciation[i][j] for k in range(nTrips)]), 0]) for i in range(nWorkers) for j in range(nVehicles)]
   pairsWeight = [sum([benefit[j][k] - depreciation[i][j] for k in range(nTrips)]) for i in range(nWorkers) for j in range(nVehicles)]
 
   # pairsWeightSum = (sum(pairsWeight) * weightInfluence) / len(pairsWeight)
   pairsWeightSum = (sum(pairsWeight)) / len(pairsWeight)
-  # print(pairsWeight)
+  #print(pairsWeight)
 
   pheromony = [[0 for i in range(nTrips)] for j in range(len(pairs))]
-  # print(pheromony)
+  #print(pheromony)
   it = 0
   itNoBetter = 0
-  while itNoBetter < 50:
+  while it < 100:
     solutions = []
       # totalPheromony = sum([sum(p) / pheromonyInfluence for p in pheromony]) / len(pheromony)
     totalPheromony = sum([sum(p) for p in pheromony]) / len(pheromony)
-    for ant in range(nAnts):
+    for ant in range(nTrips):
       # print(ant)
       workerTimes = [0 for i in range(nWorkers)]
       solution = []
@@ -37,7 +41,6 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
       numberVisited = 0
       while numberVisited < nTrips:
         duration = durations[visitedTrips]
-
         selectedPair = None
         currentPair = randint(0, len(pairs) - 1)
         amount = 0
@@ -51,6 +54,8 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
           # print(currentPair, visitedTrips, len(pairsWeight))
           prob = (pheromony[currentPair][visitedTrips] * pheromonyInfluence + pairsWeight[currentPair] * weightInfluence) / (totalPheromony + pairsWeightSum)
           realProb = random()
+          realProb = realProb / 10
+          #print((prob, realProb))
           if realProb < prob:
             selectedPair = currentPair
             workerTimes[worker] += durations[visitedTrips]
@@ -59,12 +64,11 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
           # if(amount % 100 == 0):
           #   print(amount)
           currentPair = (currentPair + 1) % len(pairs)
-        
-        solution.append([visitedTrips, selectedPair])
+        solution.append([numberVisited, selectedPair])
         visitedTrips = (visitedTrips + 1) % nTrips
         numberVisited += 1
       solutions.append(solution)
-    fitnesses = [fitness(solution, pairsWeight) for s in solutions]
+    fitnesses = [fitness(s, pairsWeight) for s in solutions]
     visitedTripAndPairs = set()
     for solution in solutions:
       for unit in solution:
@@ -77,14 +81,29 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
 
     if it == 0:
       best = max(fitnesses)
+      best_0 = best
     else:
       bestResult = max(fitnesses)
       if best < bestResult:
         best = bestResult
+        for c in range(len(solutions)):
+          f = fitness(solutions[c], pairsWeight)
+          if f == best:
+            best_solution = solutions[c]
         itNoBetter = 0
       else:
         itNoBetter += 1
     it += 1
+    lucros.append(best)
     print(f'Best fitness: {best}')
 
-  print(pheromony)
+  print('\n')
+  print('Solução obtida: ')
+  print(best_solution)
+  best_final = fitness(best_solution, pairsWeight)
+  print(f'Lucro total: {best_final}')
+  improvement = (best_final / best_0) - 1
+  print(f'Percentual de melhora ao longo das iterações: {improvement*100}%')
+  grafico_linha(range(100), lucros, 'lucro_total_iteracoes', improvement*100)
+  return best_final
+  #print(pheromony)

@@ -1,8 +1,8 @@
 import json
 from random import randint
 
-nVehicles = 10
-nWorkers = 15
+nVehicles = 15
+nWorkers = 20
 nTrips = 200
 upperBoundBenefit = 700
 lowerBoundBenefit = 300
