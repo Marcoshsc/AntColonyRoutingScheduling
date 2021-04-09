@@ -16,6 +16,7 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
 
   best = list
   lucros = []
+  media = []
   best_solution = []
   pairs = [[i, j] for i in range(nVehicles) for j in range(nWorkers)]
   # pairsWeight = [max([sum([benefit[j][k] - depreciation[i][j] for k in range(nTrips)]), 0]) for i in range(nWorkers) for j in range(nVehicles)]
@@ -69,6 +70,7 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
         numberVisited += 1
       solutions.append(solution)
     fitnesses = [fitness(s, pairsWeight) for s in solutions]
+    mediaAtual = sum(fitnesses) / len(fitnesses)
     visitedTripAndPairs = set()
     for solution in solutions:
       for unit in solution:
@@ -94,8 +96,10 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
       else:
         itNoBetter += 1
     it += 1
+    media.append(mediaAtual)
     lucros.append(best)
     print(f'Best fitness: {best}')
+    print(f'Média: {mediaAtual}')
 
   print('\n')
   print('Solução obtida: ')
@@ -104,6 +108,6 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   print(f'Lucro total: {best_final}')
   improvement = (best_final / best_0) - 1
   print(f'Percentual de melhora ao longo das iterações: {improvement*100}%')
-  grafico_linha(range(100), lucros, 'lucro_total_iteracoes', improvement*100)
+  grafico_linha(range(100),media, lucros, 'lucro_total_iteracoes', improvement*100)
   return best_final
   #print(pheromony)
