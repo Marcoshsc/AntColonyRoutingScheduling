@@ -7,11 +7,11 @@ nTrips = 200
 upperBoundBenefit = 700
 lowerBoundBenefit = 300
 upperBoundDepretiation = 300
-upperBoundDuration = 500
+upperBoundDuration = 3600
+lowerBoundDuration = 900
 
 
-
-trips = [randint(1, upperBoundDuration) for i in range(nTrips)]
+trips = [randint(lowerBoundDuration, upperBoundDuration) for i in range(nTrips)]
 
 benefit = [[randint(lowerBoundBenefit, upperBoundBenefit) for i in range(nTrips)] for j in range(nVehicles)]
 

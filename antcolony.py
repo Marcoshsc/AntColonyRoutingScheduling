@@ -50,7 +50,7 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
           worker = pair[1]
           vehicle = pair[0]
           if workerTimes[worker] + durations[visitedTrips] > 28800:
-            print(f'{worker} hours is complete')
+            currentPair = randint(0, len(pairs) - 1)
             continue
           # print(currentPair, visitedTrips, len(pairsWeight))
           prob = (pheromony[currentPair][visitedTrips] * pheromonyInfluence + pairsWeight[currentPair] * weightInfluence) / (totalPheromony + pairsWeightSum)
@@ -102,12 +102,12 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
     print(f'Média: {mediaAtual}')
 
   print('\n')
-  print('Solução obtida: ')
-  print(best_solution)
+  #print('Solução obtida: ')
+  #print(best_solution)
   best_final = fitness(best_solution, pairsWeight)
   print(f'Lucro total: {best_final}')
   improvement = (best_final / best_0) - 1
   print(f'Percentual de melhora ao longo das iterações: {improvement*100}%')
   grafico_linha(range(100),media, lucros, 'lucro_total_iteracoes', improvement*100)
-  return best_final
+  return best_final, improvement*100
   #print(pheromony)
