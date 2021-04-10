@@ -8,11 +8,11 @@ def fitness(solution, pairsWeight):
 def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
 
   nAnts = nTrips
-  nIter = 50
-  pheromonyInfluence = 0.5
-  weightInfluence = 0.5
+  nIter = 200
+  pheromonyInfluence = 5
+  weightInfluence = 0.02
   amountPheromony = 100000
-  evaporationRate = 0.1
+  evaporationRate = 0.2
 
   best = list
   lucros = []
@@ -30,7 +30,7 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   #print(pheromony)
   it = 0
   itNoBetter = 0
-  while it < 100:
+  while itNoBetter < nIter:
     solutions = []
       # totalPheromony = sum([sum(p) / pheromonyInfluence for p in pheromony]) / len(pheromony)
     totalPheromony = sum([sum(p) for p in pheromony]) / len(pheromony)
@@ -108,6 +108,6 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   print(f'Lucro total: {best_final}')
   improvement = (best_final / best_0) - 1
   print(f'Percentual de melhora ao longo das iterações: {improvement*100}%')
-  grafico_linha(range(100),media, lucros, 'lucro_total_iteracoes', improvement*100)
+  grafico_linha(range(it),media, lucros, 'lucro_total_iteracoes', improvement*100)
   return best_final, improvement*100
   #print(pheromony)
