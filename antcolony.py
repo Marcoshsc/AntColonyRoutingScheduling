@@ -3,16 +3,16 @@ import operator
 from funcoes import grafico_linha
 
 def fitness(solution, pairsWeight):
-  return sum([pairsWeight[s[1]] for s in solution])
+  return sum([pairsWeight[s[1]][s[0]] for s in solution])
 
 def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
 
   nAnts = nTrips
-  nIter = 200
-  pheromonyInfluence = 5
-  weightInfluence = 0.02
+  nIter = 50
+  pheromonyInfluence = 50
+  weightInfluence = 0.5
   amountPheromony = 100000
-  evaporationRate = 0.2
+  evaporationRate = 0.9
 
   best = list
   lucros = []
@@ -20,12 +20,15 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   best_solution = []
   pairs = [[i, j] for i in range(nVehicles) for j in range(nWorkers)]
   # pairsWeight = [max([sum([benefit[j][k] - depreciation[i][j] for k in range(nTrips)]), 0]) for i in range(nWorkers) for j in range(nVehicles)]
-  pairsWeight = [sum([benefit[j][k] - depreciation[i][j] for k in range(nTrips)]) for i in range(nWorkers) for j in range(nVehicles)]
+  # pairsWeight = [sum([benefit[j][k] - depreciation[i][j] for k in range(nTrips)]) for i in range(nWorkers) for j in range(nVehicles)]
+  pairsWeight = [[benefit[el[0]][k] - depreciation[el[1]][el[0]] for k in range(nTrips)] for el in pairs]
 
+  # print(len(pairsWeight[0]))
+  # print(pairsWeight)
   # pairsWeightSum = (sum(pairsWeight) * weightInfluence) / len(pairsWeight)
-  pairsWeightSum = (sum(pairsWeight)) / len(pairsWeight)
-  #print(pairsWeight)
-
+  # pairsWeightSum = [sum(pairsWeight[i]) for i in range(len(pairsWeight))]
+  greaterPairsWeight = [max(pairsWeight[i]) for i in range(len(pairsWeight))]
+  # print(pairsWeightSum)
   pheromony = [[0 for i in range(nTrips)] for j in range(len(pairs))]
   #print(pheromony)
   it = 0
@@ -33,7 +36,9 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   while itNoBetter < nIter:
     solutions = []
       # totalPheromony = sum([sum(p) / pheromonyInfluence for p in pheromony]) / len(pheromony)
-    totalPheromony = sum([sum(p) for p in pheromony]) / len(pheromony)
+    # totalPheromony = sum([sum(p) for p in pheromony])
+    # print(totalPheromony)
+    greaterPheromony = [max(p) for p in pheromony]
     for ant in range(nTrips):
       # print(ant)
       workerTimes = [0 for i in range(nWorkers)]
@@ -53,8 +58,16 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
             currentPair = randint(0, len(pairs) - 1)
             continue
           # print(currentPair, visitedTrips, len(pairsWeight))
-          prob = (pheromony[currentPair][visitedTrips] * pheromonyInfluence + pairsWeight[currentPair] * weightInfluence) / (totalPheromony + pairsWeightSum)
+          # print(pheromony[currentPair][visitedTrips] * pheromonyInfluence + pairsWeight[currentPair][visitedTrips] * weightInfluence, totalPheromony[currentPair] + pairsWeightSum[currentPair])
+          # print(pheromony[currentPair][visitedTrips] * pheromonyInfluence, pairsWeight[currentPair][visitedTrips] * weightInfluence, totalPheromony[currentPair] + pairsWeightSum[currentPair])
+          # print(max([greaterPheromony[currentPair] ** pheromonyInfluence, 1]) * (greaterPairsWeight[currentPair] ** weightInfluence))
+          # print(max([pheromony[currentPair][visitedTrips] ** pheromonyInfluence, 1]) * (pairsWeight[currentPair][visitedTrips] ** weightInfluence))
+          # print('here')
+          prob = ((pheromony[currentPair][visitedTrips] * pheromonyInfluence) + (pairsWeight[currentPair][visitedTrips] * weightInfluence)) / ((greaterPheromony[currentPair] * pheromonyInfluence) + (greaterPairsWeight[currentPair] * weightInfluence))
+          # print('hereafter')
+          # print(prob)
           realProb = random()
+          # print(prob)
           realProb = realProb / 10
           #print((prob, realProb))
           if realProb < prob:
@@ -75,6 +88,7 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
     for solution in solutions:
       for unit in solution:
         pheromony[unit[1]][unit[0]] += amountPheromony / durations[unit[0]]
+        pheromony[unit[1]][unit[0]] *= evaporationRate
         visitedTripAndPairs.add(f'{unit[0]}-{unit[1]}')
     for t in range(nTrips):
       for p in range(len(pairs)):

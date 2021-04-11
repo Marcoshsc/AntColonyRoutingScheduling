@@ -4,9 +4,9 @@ from random import randint
 nVehicles = 15
 nWorkers = 20
 nTrips = 200
-upperBoundBenefit = 700
-lowerBoundBenefit = 300
-upperBoundDepretiation = 300
+upperBoundBenefit = 70
+lowerBoundBenefit = 30
+upperBoundDepretiation = 30
 upperBoundDuration = 3600
 lowerBoundDuration = 900
 
