@@ -1,20 +1,28 @@
 from random import randint, random
 import operator
-from funcoes import grafico_linha
+from funcoes import grafico_linha, grafico_improvement
 
 def fitness(solution, pairsWeight):
   return sum([pairsWeight[s[1]][s[0]] for s in solution])
 
 def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
 
+  # nAnts = nTrips
+  # nIter = 10
+  # pheromonyInfluence = 2
+  # weightInfluence = 10
+  # amountPheromony = (sum(durations) * 100) / len(durations)
+  # evaporationRate = 0.9
+
   nAnts = nTrips
-  nIter = 50
+  nIter = 20
   pheromonyInfluence = 2
   weightInfluence = 10
   amountPheromony = (sum(durations) * 100) / len(durations)
   evaporationRate = 0.9
 
   best = list
+  improveAmount = []
   lucros = []
   media = []
   best_solution = []
@@ -70,7 +78,7 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
           # print(prob)
           realProb = random()
           # print(prob)
-          # realProb = realProb / 10
+          # realProb /= realProb / 10
           #print((prob, realProb))
           if realProb < prob:
             # print(realProb, prob)
@@ -101,16 +109,20 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
     if it == 0:
       best = max(fitnesses)
       best_0 = best
+      improveAmount.append(0)
     else:
       bestResult = max(fitnesses)
       if best < bestResult:
+        ratio = (100 * (bestResult / best)) - 100
         best = bestResult
+        improveAmount.append(improveAmount[-1] + ratio)
         for c in range(len(solutions)):
           f = fitness(solutions[c], pairsWeight)
           if f == best:
             best_solution = solutions[c]
         itNoBetter = 0
       else:
+        improveAmount.append(improveAmount[-1])
         itNoBetter += 1
     it += 1
     media.append(mediaAtual)
@@ -126,5 +138,7 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   improvement = (best_final / best_0) - 1
   print(f'Percentual de melhora ao longo das iterações: {improvement*100}%')
   grafico_linha(range(it),media, lucros, 'lucro_total_iteracoes', improvement*100)
+  grafico_improvement(range(it), improveAmount, 'improvement_percentage')
+  print(improveAmount)
   return best_final, improvement*100
   #print(pheromony)
