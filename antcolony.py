@@ -9,9 +9,9 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
 
   nAnts = nTrips
   nIter = 50
-  pheromonyInfluence = 50
-  weightInfluence = 0.5
-  amountPheromony = 100000
+  pheromonyInfluence = 2
+  weightInfluence = 10
+  amountPheromony = (sum(durations) * 100) / len(durations)
   evaporationRate = 0.9
 
   best = list
@@ -26,8 +26,8 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   # print(len(pairsWeight[0]))
   # print(pairsWeight)
   # pairsWeightSum = (sum(pairsWeight) * weightInfluence) / len(pairsWeight)
-  # pairsWeightSum = [sum(pairsWeight[i]) for i in range(len(pairsWeight))]
-  greaterPairsWeight = [max(pairsWeight[i]) for i in range(len(pairsWeight))]
+  pairsWeightSum = [sum(pairsWeight[i]) for i in range(len(pairsWeight))]
+  # greaterPairsWeight = [max(pairsWeight[i]) for i in range(len(pairsWeight))]
   # print(pairsWeightSum)
   pheromony = [[0 for i in range(nTrips)] for j in range(len(pairs))]
   #print(pheromony)
@@ -36,9 +36,9 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   while itNoBetter < nIter:
     solutions = []
       # totalPheromony = sum([sum(p) / pheromonyInfluence for p in pheromony]) / len(pheromony)
-    # totalPheromony = sum([sum(p) for p in pheromony])
+    totalPheromony = [sum(p) for p in pheromony]
     # print(totalPheromony)
-    greaterPheromony = [max(p) for p in pheromony]
+    # greaterPheromony = [max(p) for p in pheromony]
     for ant in range(nTrips):
       # print(ant)
       workerTimes = [0 for i in range(nWorkers)]
@@ -63,14 +63,17 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
           # print(max([greaterPheromony[currentPair] ** pheromonyInfluence, 1]) * (greaterPairsWeight[currentPair] ** weightInfluence))
           # print(max([pheromony[currentPair][visitedTrips] ** pheromonyInfluence, 1]) * (pairsWeight[currentPair][visitedTrips] ** weightInfluence))
           # print('here')
-          prob = ((pheromony[currentPair][visitedTrips] * pheromonyInfluence) + (pairsWeight[currentPair][visitedTrips] * weightInfluence)) / ((greaterPheromony[currentPair] * pheromonyInfluence) + (greaterPairsWeight[currentPair] * weightInfluence))
+          prob = ((pheromony[currentPair][visitedTrips] * pheromonyInfluence) + (pairsWeight[currentPair][visitedTrips] * weightInfluence)) / ((totalPheromony[currentPair]) + (pairsWeightSum[currentPair]))
           # print('hereafter')
+          # if prob < 0.1:
+          #   prob = 0.1
           # print(prob)
           realProb = random()
           # print(prob)
-          realProb = realProb / 10
+          # realProb = realProb / 10
           #print((prob, realProb))
           if realProb < prob:
+            # print(realProb, prob)
             selectedPair = currentPair
             workerTimes[worker] += durations[visitedTrips]
           # print(realProb, prob)
@@ -87,8 +90,8 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
     visitedTripAndPairs = set()
     for solution in solutions:
       for unit in solution:
+        # pheromony[unit[1]][unit[0]] *= evaporationRate
         pheromony[unit[1]][unit[0]] += amountPheromony / durations[unit[0]]
-        pheromony[unit[1]][unit[0]] *= evaporationRate
         visitedTripAndPairs.add(f'{unit[0]}-{unit[1]}')
     for t in range(nTrips):
       for p in range(len(pairs)):
