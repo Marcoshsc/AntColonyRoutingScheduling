@@ -15,11 +15,11 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   # evaporationRate = 0.9
 
   nAnts = nTrips
-  nIter = 20
-  pheromonyInfluence = 2
+  nIter = 200
+  pheromonyInfluence = 0.1
   weightInfluence = 10
-  amountPheromony = (sum(durations) * 100) / len(durations)
-  evaporationRate = 0.9
+  amountPheromony = (sum(durations) / len(durations)) * 100
+  evaporationRate = 0.8
 
   best = list
   improveAmount = []
@@ -139,6 +139,6 @@ def antColony(nTrips, nVehicles, nWorkers, durations, depreciation, benefit):
   print(f'Percentual de melhora ao longo das iterações: {improvement*100}%')
   grafico_linha(range(it),media, lucros, 'lucro_total_iteracoes', improvement*100)
   grafico_improvement(range(it), improveAmount, 'improvement_percentage')
-  print(improveAmount)
+  # print(improveAmount)
   return best_final, improvement*100
   #print(pheromony)
